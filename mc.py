@@ -1,35 +1,6 @@
 import numpy as np
-from gridworld import GridWorld
 
-
-def create_env():
-    """
-    Создает среду для экспериментов
-    
-    :return: среду
-    """
-    # Создаем среду в виде сетки 3x4
-    env = GridWorld(3, 4)
-    # Задаем матрицу состояний
-    state_matrix = np.zeros((3, 4))
-    state_matrix[0, 3] = 1
-    state_matrix[1, 3] = 1
-    state_matrix[1, 1] = -1
-    # Задаем матрицу вознаграждений
-    # Для всех кроме терминальных состояний вознаграждение -0.04
-    reward_matrix = np.full((3, 4), -0.04)
-    reward_matrix[0, 3] = 1
-    reward_matrix[1, 3] = -1
-    # Задаем матрицу вероятности совершения действия
-    transition_matrix = np.array([[0.8, 0.1, 0.0, 0.1],
-                                  [0.1, 0.8, 0.1, 0.0],
-                                  [0.0, 0.1, 0.8, 0.1],
-                                  [0.1, 0.0, 0.1, 0.8]])
-    # Настраиваем и возвращаем среду
-    env.setStateMatrix(state_matrix)
-    env.setRewardMatrix(reward_matrix)
-    env.setTransitionMatrix(transition_matrix)
-    return env
+from utils import create_env
 
 
 def get_return(state_list, gamma):
@@ -186,7 +157,7 @@ def mc_control(env, policy_matrix, gamma=0.999, tot_epoch=500000, print_epoch=10
         # 1 - Шаг обновления в GPI.
         policy_matrix = update_policy(episode_list, policy_matrix, state_action_matrix / running_mean_matrix)
         # если требуется, выводим промежуточный результат работы алгоритма
-        if (epoch % print_epoch == 0):
+        if epoch % print_epoch == 0:
             print("")
             print("State-Action matrix after " + str(epoch + 1) + " iterations:")
             print(state_action_matrix / running_mean_matrix)
